@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Angka - Permainan Matematika Dasar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(to right, #FF416C, #FF4B2B);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .player-info {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-box {
+            text-align: center;
+            flex: 1;
+        }
+
+        .info-title {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .info-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2575fc;
+        }
+
+        .game-screen {
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .question-box {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .question {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .option {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .option.correct {
+            background-color: #4CAF50;
+            animation: pulse 0.5s;
+        }
+
+        .option.wrong {
+            background-color: #f44336;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #FF416C, #FF4B2B);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(to right, #36D1DC, #5B86E5);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            min-height: 30px;
+        }
+
+        .correct-feedback {
+            color: #4CAF50;
+        }
+
+        .wrong-feedback {
+            color: #f44336;
+        }
+
+        .level-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .level-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .level-btn.active {
+            background: linear-gradient(to right, #FF416C, #FF4B2B);
+            color: white;
+        }
+
+        .character {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(to right, #FFE000, #799F0C);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .character::before, .character::after {
+            content: '';
+            position: absolute;
+            background-color: #333;
+            border-radius: 50%;
+        }
+
+        .character::before {
+            width: 20px;
+            height: 20px;
+            top: 30px;
+            left: 25px;
+        }
+
+        .character::after {
+            width: 20px;
+            height: 20px;
+            top: 30px;
+            right: 25px;
+        }
+
+        .character .smile {
+            position: absolute;
+            width: 40px;
+            height: 20px;
+            border-bottom: 5px solid #333;
+            border-radius: 0 0 20px 20px;
+            bottom: 25px;
+            left: 30px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .celebration {
+            animation: bounce 0.5s ease infinite;
+        }
+
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .player-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Petualangan Angka</h1>
+            <p class="subtitle">Belajar Matematika dengan Menyenangkan!</p>
+        </header>
+        
+        <div class="game-area">
+            <div class="player-info">
+                <div class="info-box">
+                    <div class="info-title">Level</div>
+                    <div class="info-value" id="level">1</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-title">Skor</div>
+                    <div class="info-value" id="score">0</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-title">Nyawa</div>
+                    <div class="info-value" id="lives">3</div>
+                </div>
+            </div>
+            
+            <div class="game-screen">
+                <div class="character" id="character">
+                    <div class="smile"></div>
+                </div>
+                
+                <div class="question-box">
+                    <div class="question" id="question">5 + 3 = ?</div>
+                    <div class="options" id="options">
+                        <!-- Opsi jawaban akan diisi oleh JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="feedback" id="feedback"></div>
+                
+                <div class="level-selector">
+                    <button class="level-btn active" data-level="1">Mudah</button>
+                    <button class="level-btn" data-level="2">Sedang</button>
+                    <button class="level-btn" data-level="3">Sulit</button>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-secondary" id="hintBtn">Petunjuk</button>
+                    <button class="btn btn-primary" id="nextBtn">Soal Berikutnya</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variabel permainan
+        let score = 0;
+        let lives = 3;
+        let currentLevel = 1;
+        let currentQuestion = {};
+        let correctAnswer = 0;
+        
+        // Elemen DOM
+        const scoreElement = document.getElementById('score');
+        const livesElement = document.getElementById('lives');
+        const levelElement = document.getElementById('level');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const feedbackElement = document.getElementById('feedback');
+        const characterElement = document.getElementById('character');
+        const hintBtn = document.getElementById('hintBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const levelButtons = document.querySelectorAll('.level-btn');
+        
+        // Fungsi untuk menghasilkan soal matematika
+        function generateQuestion(level) {
+            let num1, num2, operator, answer;
+            
+            switch(level) {
+                case 1: // Mudah: penjumlahan dan pengurangan 1-10
+                    num1 = Math.floor(Math.random() * 10) + 1;
+                    num2 = Math.floor(Math.random() * 10) + 1;
+                    operator = Math.random() > 0.5 ? '+' : '-';
+                    break;
+                case 2: // Sedang: perkalian dan pembagian 1-10
+                    num1 = Math.floor(Math.random() * 10) + 1;
+                    num2 = Math.floor(Math.random() * 10) + 1;
+                    operator = Math.random() > 0.5 ? '×' : '÷';
+                    break;
+                case 3: // Sulit: campuran dengan angka lebih besar
+                    num1 = Math.floor(Math.random() * 20) + 1;
+                    num2 = Math.floor(Math.random() * 20) + 1;
+                    const operators = ['+', '-', '×', '÷'];
+                    operator = operators[Math.floor(Math.random() * operators.length)];
+                    break;
+            }
+            
+            // Hitung jawaban yang benar
+            switch(operator) {
+                case '+':
+                    answer = num1 + num2;
+                    break;
+                case '-':
+                    // Pastikan hasil tidak negatif
+                    if (num1 < num2) [num1, num2] = [num2, num1];
+                    answer = num1 - num2;
+                    break;
+                case '×':
+                    answer = num1 * num2;
+                    break;
+                case '÷':
+                    // Pastikan pembagian menghasilkan bilangan bulat
+                    answer = num1;
+                    num1 = num1 * num2;
+                    break;
+            }
+            
+            // Simpan pertanyaan saat ini
+            currentQuestion = {
+                num1: num1,
+                num2: num2,
+                operator: operator,
+                answer: answer
+            };
+            
+            // Tampilkan pertanyaan
+            questionElement.textContent = `${num1} ${operator} ${num2} = ?`;
+            
+            // Buat opsi jawaban
+            generateOptions(answer, level);
+        }
+        
+        // Fungsi untuk menghasilkan opsi jawaban
+        function generateOptions(correctAnswer, level) {
+            optionsElement.innerHTML = '';
+            const options = [correctAnswer];
+            
+            // Tambahkan jawaban yang salah
+            while (options.length < 4) {
+                let wrongAnswer;
+                const variance = level * 3; // Variasi berdasarkan level
+                
+                do {
+                    wrongAnswer = correctAnswer + Math.floor(Math.random() * variance * 2) - variance;
+                } while (wrongAnswer === correctAnswer || options.includes(wrongAnswer) || wrongAnswer < 0);
+                
+                options.push(wrongAnswer);
+            }
+            
+            // Acak urutan opsi
+            shuffleArray(options);
+            
+            // Buat tombol untuk setiap opsi
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.addEventListener('click', () => checkAnswer(option, correctAnswer));
+                optionsElement.appendChild(button);
+            });
+        }
+        
+        // Fungsi untuk mengacak array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // Fungsi untuk memeriksa jawaban
+        function checkAnswer(selectedAnswer, correctAnswer) {
+            const options = document.querySelectorAll('.option');
+            
+            // Nonaktifkan semua tombol setelah menjawab
+            options.forEach(option => {
+                option.disabled = true;
+            });
+            
+            if (selectedAnswer === correctAnswer) {
+                // Jawaban benar
+                score += currentLevel * 10;
+                scoreElement.textContent = score;
+                feedbackElement.textContent = "Hebat! Jawabanmu benar!";
+                feedbackElement.className = "feedback correct-feedback";
+                
+                // Tandai jawaban yang benar
+                options.forEach(option => {
+                    if (parseInt(option.textContent) === correctAnswer) {
+                        option.classList.add('correct');
+                    }
+                });
+                
+                // Animasi karakter
+                characterElement.classList.add('celebration');
+                setTimeout(() => {
+                    characterElement.classList.remove('celebration');
+                }, 1000);
+            } else {
+                // Jawaban salah
+                lives--;
+                livesElement.textContent = lives;
+                feedbackElement.textContent = `Yah, jawaban yang benar adalah ${correctAnswer}`;
+                feedbackElement.className = "feedback wrong-feedback";
+                
+                // Tandai jawaban yang salah dan benar
+                options.forEach(option => {
+                    if (parseInt(option.textContent) === correctAnswer) {
+                        option.classList.add('correct');
+                    } else if (parseInt(option.textContent) === selectedAnswer) {
+                        option.classList.add('wrong');
+                    }
+                });
+                
+                // Periksa apakah permainan berakhir
+                if (lives <= 0) {
+                    setTimeout(endGame, 1500);
+                }
+            }
+        }
+        
+        // Fungsi untuk memberikan petunjuk
+        function giveHint() {
+            if (lives > 1) {
+                lives--;
+                livesElement.textContent = lives;
+                
+                // Hilangkan dua jawaban yang salah
+                const options = document.querySelectorAll('.option:not(.correct)');
+                let removed = 0;
+                
+                options.forEach(option => {
+                    if (removed < 2 && !option.classList.contains('correct')) {
+                        option.style.opacity = '0.3';
+                        option.disabled = true;
+                        removed++;
+                    }
+                });
+                
+                feedbackElement.textContent = "Dua jawaban salah telah dihilangkan!";
+                feedbackElement.className = "feedback";
+            } else {
+                feedbackElement.textContent = "Tidak cukup nyawa untuk petunjuk!";
+                feedbackElement.className = "feedback wrong-feedback";
+            }
+        }
+        
+        // Fungsi untuk soal berikutnya
+        function nextQuestion() {
+            feedbackElement.textContent = '';
+            feedbackElement.className = 'feedback';
+            generateQuestion(currentLevel);
+        }
+        
+        // Fungsi untuk mengubah level
+        function changeLevel(level) {
+            currentLevel = level;
+            levelElement.textContent = level;
+            
+            // Update tombol level aktif
+            levelButtons.forEach(btn => {
+                if (parseInt(btn.dataset.level) === level) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Reset dan mulai dengan level baru
+            nextQuestion();
+        }
+        
+        // Fungsi untuk mengakhiri permainan
+        function endGame() {
+            questionElement.textContent = `Permainan Selesai! Skor Akhir: ${score}`;
+            optionsElement.innerHTML = '';
+            feedbackElement.textContent = "Klik tombol di bawah untuk bermain lagi";
+            
+            const playAgainBtn = document.createElement('button');
+            playAgainBtn.className = 'btn btn-primary';
+            playAgainBtn.textContent = 'Main Lagi';
+            playAgainBtn.addEventListener('click', resetGame);
+            
+            optionsElement.appendChild(playAgainBtn);
+        }
+        
+        // Fungsi untuk mereset permainan
+        function resetGame() {
+            score = 0;
+            lives = 3;
+            scoreElement.textContent = score;
+            livesElement.textContent = lives;
+            nextQuestion();
+        }
+        
+        // Event listeners
+        hintBtn.addEventListener('click', giveHint);
+        nextBtn.addEventListener('click', nextQuestion);
+        
+        levelButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                changeLevel(parseInt(button.dataset.level));
+            });
+        });
+        
+        // Mulai permainan
+        generateQuestion(currentLevel);
+    </script>
+</body>
+</html>
